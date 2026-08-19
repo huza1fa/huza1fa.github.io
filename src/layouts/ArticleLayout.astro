@@ -1,0 +1,110 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import SiteLayout from './SiteLayout.astro';
+import Tag from '../components/Tag.astro';
+import TableOfContents from '../components/TableOfContents.astro';
+import WritingListItem from '../components/WritingListItem.astro';
+import { formatDate, readingTime } from '../utils/content';
+
+interface Props { entry: CollectionEntry<'writing'>; headings: { depth: number; slug: string; text: string }[]; related: CollectionEntry<'writing'>[]; }
+const { entry, headings, related } = Astro.props;
+const { title, description, publishDate, updatedDate, category, tags, coverImage, coverImageAlt, canonicalURL, placeholder } = entry.data;
+---
+
+<SiteLayout title={title} description={description} image={coverImage} imageAlt={coverImageAlt} type="article" publishedTime={publishDate} modifiedTime={updatedDate} canonicalURL={canonicalURL}>
+	<article class="article">
+		<header class="article-header page">
+			<p class="eyebrow">{placeholder ? 'Placeholder writing' : category}</p>
+			<h1>{title}</h1>
+			<p class="dek">{description}</p>
+			<div class="article-meta meta">
+				<time datetime={publishDate.toISOString()}>{formatDate(publishDate)}</time>
+				<span aria-hidden="true">/</span>
+				<span>{readingTime(entry.body)} min read</span>
+				{updatedDate && <><span aria-hidden="true">/</span><span>Updated {formatDate(updatedDate)}</span></>}
+			</div>
+			<div class="article-tags"><Tag label={category} />{tags.map((tag) => <Tag label={tag} />)}</div>
+		</header>
+		{coverImage && <figure class="cover page"><Image src={coverImage} alt={coverImageAlt ?? ''} /></figure>}
+		<div class="article-body page">
+			<TableOfContents headings={headings} />
+			<div class="article-prose prose"><slot /></div>
+		</div>
+		<div class="article-footer page">
+			<a class="back-link" href="/writing">Back to writing</a>
+			{related.length > 0 && <section aria-labelledby="related-heading"><p class="eyebrow">Continue reading</p><h2 id="related-heading">Related notes</h2><div>{related.map((item) => <WritingListItem entry={item} />)}</div></section>}
+		</div>
+		<script>
+			document.querySelectorAll('.prose h2, .prose h3, .prose h4').forEach((heading) => {
+				if (!heading.id) return;
+				const text = heading.textContent?.trim() ?? 'this section';
+				const link = document.createElement('a');
+				link.className = 'heading-anchor';
+				link.href = `#${heading.id}`;
+				link.textContent = '#';
+				link.setAttribute('aria-label', `Link to ${text}`);
+				heading.append(link);
+			});
+
+			document.querySelectorAll('.prose table').forEach((table) => {
+				const wrapper = document.createElement('div');
+				wrapper.className = 'table-scroll';
+				wrapper.tabIndex = 0;
+				wrapper.setAttribute('role', 'region');
+				wrapper.setAttribute('aria-label', 'Scrollable table');
+				table.parentNode?.insertBefore(wrapper, table);
+				wrapper.append(table);
+			});
+
+			document.querySelectorAll('.prose pre').forEach((pre) => {
+				const button = document.createElement('button');
+				button.className = 'copy-code';
+				button.type = 'button';
+				button.textContent = 'Copy';
+				button.setAttribute('aria-label', 'Copy code to clipboard');
+				button.addEventListener('click', async () => {
+					try {
+						await navigator.clipboard.writeText(pre.querySelector('code')?.textContent ?? '');
+						button.textContent = 'Copied';
+						button.setAttribute('aria-label', 'Code copied to clipboard');
+					} catch {
+						button.textContent = 'Unable to copy';
+						button.setAttribute('aria-label', 'Unable to copy code');
+					}
+					setTimeout(() => {
+						button.textContent = 'Copy';
+						button.setAttribute('aria-label', 'Copy code to clipboard');
+					}, 1600);
+				});
+				pre.append(button);
+			});
+		</script>
+	</article>
+</SiteLayout>
+<style>
+	.article-header h1 { max-width: 18ch; margin: 0.35rem 0 0.7rem; font-size: clamp(2.55rem, 6.2vw, 5.2rem); font-weight: 700; line-height: 0.98; letter-spacing: -0.065em; }
+	.dek { max-width: 55ch; margin: 0; color: var(--muted); font-size: clamp(1.1rem, 1rem + 0.5vw, 1.35rem); line-height: 1.45; }
+	.article-meta, .article-tags { display: flex; flex-wrap: wrap; gap: 0.55rem; margin-top: 1.35rem; }
+	.article-tags { gap: 0.6rem 1rem; }
+	.article-tags :global(.tag) { font-size: 0.66rem; }
+	.cover { margin-bottom: 3rem; }
+	.cover img { width: 100%; max-height: 37rem; border: 1px solid var(--rule); object-fit: cover; }
+	.article-header, .article-body { display: grid; grid-template-columns: minmax(0, 43rem) minmax(10rem, 14rem); justify-content: space-between; gap: 4rem; }
+	.article-header { padding-top: clamp(4rem, 10vw, 8rem); padding-bottom: 3.5rem; }
+	.article-header > * { grid-column: 1; }
+	.article-body { align-items: start; }
+	.article-body :global(.toc) { position: sticky; top: 1.5rem; grid-column: 2; grid-row: 1; margin-top: 0.5rem; }
+	.article-prose { grid-column: 1; grid-row: 1; }
+	.article-footer { padding-top: 4rem; padding-bottom: 5rem; }
+	.article-footer > * { max-width: 43rem; }
+	.back-link { display: inline-block; margin-bottom: 4rem; color: var(--muted); font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.04em; text-decoration: none; text-transform: uppercase; }
+	.article-footer h2 { margin: 0.35rem 0 1.5rem; font-size: 1.75rem; letter-spacing: -0.035em; }
+	.article-footer :global(.writing-item) { grid-template-columns: 7.75rem 1fr; }
+	:global(.prose h2), :global(.prose h3), :global(.prose h4) { position: relative; }
+	:global(.heading-anchor) { position: absolute; top: 0; left: calc(100% + 0.35em); color: var(--accent); font-family: var(--font-mono); font-size: 0.68em; font-weight: 400; opacity: 0; text-decoration: none; transition: opacity 160ms ease; }
+	:global(.prose h2:hover .heading-anchor), :global(.prose h3:hover .heading-anchor), :global(.prose h4:hover .heading-anchor), :global(.heading-anchor:focus-visible) { opacity: 1; }
+	:global(.copy-code) { position: absolute; top: 0.45rem; right: 0.45rem; min-height: 2rem; padding: 0.25rem 0.45rem; border: 1px solid var(--rule); background: var(--paper); color: var(--muted); cursor: pointer; font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.04em; text-transform: uppercase; }
+	@media (max-width: 900px) { .article-header, .article-body, .article-footer { width: min(100% - 2.5rem, 43rem); display: block; } .article-body :global(.toc) { position: static; margin: 0 0 2.5rem; } .article-prose { margin-top: 0; } }
+	@media (max-width: 600px) { .article-header { padding-top: 3.5rem; padding-bottom: 2.75rem; } .article-footer :global(.writing-item) { grid-template-columns: 1fr; } }
+</style>

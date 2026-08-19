@@ -1,0 +1,23 @@
+---
+interface Heading { depth: number; slug: string; text: string; }
+interface Props { headings: Heading[]; }
+const { headings } = Astro.props;
+const visibleHeadings = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 3);
+---
+{visibleHeadings.length > 1 && (
+	<aside class="toc" aria-label="Table of contents">
+		<p class="meta">On this page</p>
+		<ol>
+			{visibleHeadings.map((heading) => <li class:list={{ nested: heading.depth === 3 }}><a href={`#${heading.slug}`}>{heading.text}</a></li>)}
+		</ol>
+	</aside>
+)}
+<style>
+	.toc { border-left: 1px solid var(--rule); padding-left: 1rem; }
+	.toc p { margin: 0 0 0.65rem; }
+	.toc ol { margin: 0; padding: 0; list-style: none; }
+	.toc li + li { margin-top: 0.45rem; }
+	.toc li.nested { padding-left: 0.75rem; }
+	.toc a { color: var(--muted); font-size: 0.78rem; line-height: 1.35; text-decoration: none; }
+	.toc a:hover { color: var(--accent-ink); }
+</style>

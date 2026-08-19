@@ -1,0 +1,24 @@
+<button class="theme-toggle" type="button" aria-pressed="false"><span>Theme</span></button>
+<script>
+	const button = document.querySelector('.theme-toggle');
+	const updateButton = () => {
+		if (!button) return;
+		const isDark = document.documentElement.dataset.theme === 'dark';
+		button.textContent = isDark ? 'Dark' : 'Light';
+		button.setAttribute('aria-pressed', String(isDark));
+		button.setAttribute('aria-label', `Switch to ${isDark ? 'light' : 'dark'} theme`);
+	};
+	updateButton();
+	button?.addEventListener('click', () => {
+		const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+		window.dispatchEvent(new CustomEvent('set-theme', { detail: next }));
+		try {
+			localStorage.setItem('theme', next);
+		} catch {}
+		updateButton();
+	});
+</script>
+<style>
+	.theme-toggle { min-height: 2.75rem; padding: 0.35rem 0.65rem; border: 1px solid var(--rule); border-radius: 0; background: transparent; color: var(--muted); cursor: pointer; font-family: var(--font-mono); font-size: 0.67rem; letter-spacing: 0.04em; text-transform: uppercase; }
+	.theme-toggle:hover { border-color: var(--accent); color: var(--accent-ink); }
+</style>

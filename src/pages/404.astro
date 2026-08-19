@@ -1,0 +1,18 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+---
+
+<SiteLayout title="Not found" description="This page does not exist." noindex>
+	<section class="not-found page">
+		<p class="eyebrow">404 / Lost signal</p>
+		<h1>Nothing useful lives at this address.</h1>
+		<p>The page may have moved, or it may never have existed. The notebook is still close by.</p>
+		<a href="/">Return home &#8594;</a>
+	</section>
+</SiteLayout>
+<style>
+	.not-found { min-height: 65vh; padding-top: clamp(5rem, 13vw, 11rem); }
+	.not-found h1 { max-width: 10ch; margin: 0.35rem 0 0.8rem; font-size: clamp(3rem, 7vw, 6rem); line-height: 0.92; letter-spacing: -0.07em; }
+	.not-found p:not(.eyebrow) { max-width: 42ch; color: var(--muted); }
+	.not-found a { display: inline-block; margin-top: 1rem; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; }
+</style>

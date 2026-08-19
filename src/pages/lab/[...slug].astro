@@ -1,0 +1,43 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import Tag from '../../components/Tag.astro';
+import { formatDate } from '../../utils/content';
+
+export async function getStaticPaths() {
+	const projects = await getCollection('projects', ({ data }) => !data.draft);
+	return projects.map((entry) => ({ params: { slug: entry.id }, props: entry }));
+}
+const entry = Astro.props as CollectionEntry<'projects'>;
+const { Content } = await render(entry);
+const { title, description, status, technologies, publishedDate, updatedDate, links, placeholder, coverImage, coverImageAlt } = entry.data;
+---
+
+<SiteLayout title={title} description={description} image={coverImage} imageAlt={coverImageAlt}>
+	<article class="project-detail narrow">
+		<header>
+			<p class="eyebrow">{placeholder ? 'Placeholder project' : `Status: ${status}`}</p>
+			<h1>{title}</h1>
+			<p class="dek">{description}</p>
+			<div class="tags">{technologies.map((technology) => <Tag label={technology} />)}</div>
+			{(publishedDate || updatedDate) && <p class="meta">{publishedDate && `Published ${formatDate(publishedDate)}`}{updatedDate && ` / Updated ${formatDate(updatedDate)}`}</p>}
+		</header>
+		{coverImage && <figure class="project-cover"><Image src={coverImage} alt={coverImageAlt!} /></figure>}
+		<div class="prose"><Content /></div>
+		{links.length > 0 && <section class="project-links" aria-labelledby="links-heading"><h2 id="links-heading">Links</h2>{links.map((link) => <a href={link.href} target="_blank" rel="noopener noreferrer">{link.label} <span aria-hidden="true">&#8599;</span><span class="sr-only"> (opens in a new tab)</span></a>)}</section>}
+	</article>
+</SiteLayout>
+<style>
+	.project-detail { padding-top: clamp(4rem, 10vw, 8rem); padding-bottom: 6rem; }
+	.project-detail header { padding-bottom: 3.5rem; }
+	.project-detail h1 { margin: 0.35rem 0 0.65rem; font-size: clamp(2.7rem, 6vw, 5rem); line-height: 0.98; letter-spacing: -0.065em; }
+	.dek { color: var(--muted); font-size: 1.2rem; line-height: 1.45; }
+	.tags { display: flex; flex-wrap: wrap; gap: 0.6rem 1rem; margin-top: 1.25rem; }
+	.tags :global(.tag) { font-size: 0.66rem; }
+	.project-detail header > .meta { margin-top: 1rem; }
+	.project-cover { margin: 0 0 2.5rem; }.project-cover img { width: 100%; border: 1px solid var(--rule); }
+	.project-links { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--rule); }
+	.project-links h2 { font-size: 1.3rem; letter-spacing: -0.025em; }
+	.project-links a { display: block; width: fit-content; margin-top: 0.5rem; }
+</style>

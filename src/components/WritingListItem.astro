@@ -1,0 +1,39 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Tag from './Tag.astro';
+import { formatDate, readingTime } from '../utils/content';
+
+interface Props { entry: CollectionEntry<'writing'>; featured?: boolean; }
+const { entry, featured = false } = Astro.props;
+const { title, description, publishDate, category, tags, placeholder } = entry.data;
+---
+
+<article class:list={['writing-item', { featured }]}>
+	<div class="item-meta meta">
+		<time datetime={publishDate.toISOString()}>{formatDate(publishDate)}</time>
+		<span aria-hidden="true">/</span>
+		<span>{readingTime(entry.body)} min read</span>
+	</div>
+	<div class="item-main">
+		<h2><a href={`/writing/${entry.id}/`}>{title}</a></h2>
+		<p>{description}</p>
+		<div class="item-tags">
+			<Tag label={category} />
+			{tags.slice(0, 3).map((tag) => <Tag label={tag} />)}
+			{placeholder && <Tag label="Placeholder" />}
+		</div>
+	</div>
+</article>
+<style>
+	.writing-item { display: grid; grid-template-columns: 10.5rem minmax(0, 1fr); gap: 1.5rem; padding: 1.6rem 0; border-top: 1px solid var(--rule); }
+	.writing-item:last-child { border-bottom: 1px solid var(--rule); }
+	.item-meta { padding-top: 0.27rem; }
+	.item-main h2 { max-width: 28ch; margin: 0; font-size: clamp(1.25rem, 2vw, 1.65rem); line-height: 1.2; letter-spacing: -0.03em; }
+	.item-main h2 a { color: var(--ink); text-decoration: none; }
+	.item-main h2 a:hover { color: var(--accent-ink); }
+	.item-main p { max-width: 62ch; margin: 0.5rem 0 0.7rem; color: var(--muted); font-size: 0.96rem; line-height: 1.55; }
+	.item-tags { display: flex; flex-wrap: wrap; gap: 0.7rem 1rem; }
+	.item-tags :global(.tag) { font-size: 0.66rem; }
+	.featured { padding-top: 0; border-top: 0; }
+	@media (max-width: 600px) { .writing-item { grid-template-columns: 1fr; gap: 0.6rem; padding: 1.35rem 0; } .item-meta { padding: 0; } }
+</style>
