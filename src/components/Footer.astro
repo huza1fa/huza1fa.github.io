@@ -1,17 +1,23 @@
 ---
-import { SITE_TITLE } from '../consts';
+import { GITHUB_URL, LINKEDIN_URL, SITE_TITLE } from '../consts';
 const year = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
 	<div class="page footer-inner">
 		<p><span class="mono">{year}</span> {SITE_TITLE}.</p>
-		<a href="/rss.xml">RSS</a>
+		<div class="footer-links">
+			<a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">GitHub / code</a>
+			<a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+			<a href="/rss.xml">RSS</a>
+		</div>
 	</div>
 </footer>
 <style>
 	.site-footer { margin-top: auto; border-top: 1px solid var(--rule); }
 	.footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-top: 1.5rem; padding-bottom: 1.75rem; color: var(--muted); font-size: 0.82rem; }
 	.footer-inner p { margin: 0; }
+	.footer-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 1rem; }
 	.footer-inner a { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase; }
+	@media (max-width: 500px) { .footer-inner { align-items: flex-start; flex-direction: column; } .footer-links { justify-content: flex-start; } }
 </style>
