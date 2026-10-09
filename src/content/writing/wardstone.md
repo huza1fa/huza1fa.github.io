@@ -1,5 +1,5 @@
 ---
-title: Wardstone: Let the Agent Investigate. Keep Authority Explicit.
+title: "Wardstone: Let the Agent Investigate. Keep Authority Explicit."
 description: What I have built so far in Wardstone, a self-hosted runtime for operational agents, and why its most important boundary is between reasoning and permission.
 publishDate: 2026-10-09
 category: Building in Public
