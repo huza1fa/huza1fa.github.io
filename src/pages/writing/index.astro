@@ -12,15 +12,30 @@ const categories = [...new Set(writing.map((entry) => entry.data.category))];
 <SiteLayout title="Writing" description="Essays, technical notes, experiments, and observations on systems and software.">
 	<div class="page writing-page">
 		<header class="listing-header">
-			<p class="eyebrow">Field notes</p>
-			<h1>Writing</h1>
+			<p class="eyebrow">The notebook / Essays & technical notes</p>
+			<h1>Notes from<br />the work.</h1>
 			<p>Essays, technical notes, and observations from a practice of building systems and paying attention to the tools around them.</p>
 		</header>
 		{writing.length > 0 ? <>
-			<div class="listing-tools" aria-label="Writing topics"><span class="meta">Topics</span>{categories.map((category) => <span>{category}</span>)}</div>
+			<div class="listing-tools" role="group" aria-label="Filter writing by topic"><button type="button" class="topic-filter" data-topic="all" aria-pressed="true">All notes <span>{writing.length}</span></button>{categories.map((category) => <button type="button" class="topic-filter" data-topic={category} aria-pressed="false">{category}</button>)}</div><p class="sr-only" id="filter-status" role="status" aria-live="polite"></p>
 			<section aria-label="All writing">{writing.map((entry) => <WritingListItem entry={entry} />)}</section>
 		</> : <p class="empty">No published writing yet. The notebook is being prepared.</p>}
 	</div>
+<script>
+        const filters = document.querySelectorAll<HTMLButtonElement>('.topic-filter');
+        const articles = document.querySelectorAll<HTMLElement>('.writing-item');
+        filters.forEach((button) => button.addEventListener('click', () => {
+            const topic = button.dataset.topic;
+            filters.forEach((filter) => filter.setAttribute('aria-pressed', String(filter === button)));
+            let visible = 0;
+            articles.forEach((article) => {
+                article.hidden = topic !== 'all' && article.dataset.category !== topic;
+                if (!article.hidden) visible++;
+            });
+            const status = document.getElementById('filter-status');
+            if (status) status.textContent = `${visible} ${visible === 1 ? 'note' : 'notes'} shown`;
+        }));
+    </script>
 </SiteLayout>
 <style>
 	.writing-page { padding-top: clamp(4rem, 10vw, 8rem); padding-bottom: 6rem; }
@@ -28,5 +43,9 @@ const categories = [...new Set(writing.map((entry) => entry.data.category))];
 	.listing-header h1 { margin: 0.35rem 0 0.65rem; font-size: clamp(3rem, 7vw, 5.5rem); line-height: 0.95; letter-spacing: -0.07em; }
 	.listing-header > p:last-child { max-width: 53ch; margin: 0; color: var(--muted); font-size: 1.12rem; }
 	.listing-tools { display: flex; flex-wrap: wrap; gap: 0.5rem 1.2rem; margin-bottom: 1.25rem; color: var(--muted); font-family: var(--font-mono); font-size: 0.67rem; letter-spacing: 0.04em; text-transform: uppercase; }
-	.empty { color: var(--muted); }
+	.topic-filter { min-height: 2.75rem; padding: 0.5rem 0.8rem; font-family: var(--font-mono); font-size: 0.6rem; color: var(--muted); border: 1px solid var(--rule); background: transparent; cursor: pointer; transition: background 160ms, color 160ms; }
+    .topic-filter[aria-pressed='true'] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+    .topic-filter:hover { border-color: var(--ink); }
+    .topic-filter span { margin-left: 0.5rem; opacity: 0.6; }
+    .empty { color: var(--muted); }
 </style>

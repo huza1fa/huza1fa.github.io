@@ -17,6 +17,7 @@ const { title, description, status, technologies, publishedDate, updatedDate, li
 <SiteLayout title={title} description={description} image={coverImage} imageAlt={coverImageAlt}>
 	<article class="project-detail narrow">
 		<header>
+            <a class="project-breadcrumb" href="/lab">← Back to the lab</a>
 			<p class="eyebrow">{placeholder ? 'Placeholder project' : `Status: ${status}`}</p>
 			<h1>{title}</h1>
 			<p class="dek">{description}</p>
@@ -29,6 +30,8 @@ const { title, description, status, technologies, publishedDate, updatedDate, li
 	</article>
 </SiteLayout>
 <style>
+    .project-breadcrumb { display: inline-block; margin-bottom: 2rem; color: var(--muted); font-family: var(--font-mono); font-size: 0.65rem; text-decoration: none; }
+    .project-detail :global(.prose > h1:first-child) { display: none; }
 	.project-detail { padding-top: clamp(4rem, 10vw, 8rem); padding-bottom: 6rem; }
 	.project-detail header { padding-bottom: 3.5rem; }
 	.project-detail h1 { margin: 0.35rem 0 0.65rem; font-size: clamp(2.7rem, 6vw, 5rem); line-height: 0.98; letter-spacing: -0.065em; }

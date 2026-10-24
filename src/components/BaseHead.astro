@@ -27,8 +27,9 @@ const schema = type === 'article'
 
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="theme-color" content="#f7f5f0" data-theme-color />
+<meta name="theme-color" content="#f8f8f2" data-theme-color />
 <meta name="color-scheme" content="light dark" />
+<link rel="preload" href="/fonts/space-grotesk-regular.ttf" as="font" type="font/ttf" crossorigin />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="alternate" type="application/rss+xml" title={`${SITE_TITLE} writing`} href="/rss.xml" />
 <link rel="canonical" href={canonical} />
@@ -56,9 +57,9 @@ const schema = type === 'article'
 	const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 	const applyTheme = (theme) => {
 		document.documentElement.dataset.theme = theme;
-		document.querySelector('[data-theme-color]')?.setAttribute('content', theme === 'dark' ? '#1d1e1b' : '#f7f5f0');
+		document.querySelector('[data-theme-color]')?.setAttribute('content', theme === 'dark' ? '#191d19' : '#f8f8f2');
 	};
-	applyTheme(storedTheme || systemTheme);
+	applyTheme(storedTheme === 'dark' || storedTheme === 'light' ? storedTheme : systemTheme);
 	window.addEventListener('set-theme', (event) => applyTheme(event.detail));
 </script>
 <Font cssVariable="--font-atkinson" preload />

@@ -1,10 +1,12 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
+import { CONTACT_EMAIL, GITHUB_URL, LINKEDIN_URL } from '../consts';
 ---
 
 <SiteLayout title="About" description="A technical professional working across systems, infrastructure, AI, automation, and software.">
 	<div class="about page">
 		<header class="about-header">
+			<p class="eyebrow">About / A little context</p>
 			<h1>Interested in how technology holds together.</h1>
 			<p>I'm Huzaifa. I work across infrastructure, cloud systems, applied AI, automation, developer tooling, and software engineering, usually on problems that sit somewhere between those boundaries rather than neatly inside one of them.</p>
 		</header>
@@ -15,11 +17,15 @@ import SiteLayout from '../layouts/SiteLayout.astro';
 				<p>I care about building technology that is understandable, resilient, and practical. That might mean designing infrastructure, improving a developer workflow, introducing an AI-enabled process, automating operational work, or helping a team make a technical decision that will still make sense a year later.</p>
 				<h2>Areas of practice</h2>
 				<ul><li>Infrastructure, cloud, and platform engineering</li><li>Applied AI and practical AI enablement</li><li>Automation, internal tools, and developer experience</li><li>Solution design, software engineering, and technical leadership</li></ul>
-				<h2>Outside the work</h2>
+				<h2>Independent work</h2>
+                <p>I take on a small number of independent engagements with startups and growing teams that need experienced platform and infrastructure capability, but do not need a full-time senior hire. The work ranges from focused discovery, architecture reviews, and solution design to hands-on implementation and fractional technical leadership. I am most useful where a prototype or loosely managed cloud estate needs to become a reliable system that a team can operate with confidence.</p>
+                <ul><li>Cloud &amp; platform architecture</li><li>AWS modernization</li><li>Terraform, CI/CD &amp; automation</li><li>Developer platforms &amp; AI-enabled tools</li><li>Fractional infrastructure leadership</li></ul>
+                <p><a href={`mailto:${CONTACT_EMAIL}`}>Email me about consulting ↗</a></p>
+                <h2>Outside the work</h2>
 				<p>A lot of the same curiosity carries into the things I spend time on outside work: Linux, developer environments, keyboards, gaming, music, software, and technology more broadly. I also spend a lot of time reading and learning about space, astronomy, and astrophysics, mostly because few subjects make the scale and complexity of the world feel quite as tangible.</p>
 				<p>This site is where I write about the things I am learning, building, experimenting with, and thinking through.</p>
 			</div>
-			<aside class="side-note"><p class="meta">This site</p><p>A personal knowledge garden for useful notes, project records, and experiments in public.</p></aside>
+			<aside class="side-note"><p class="meta">Based in Vancouver, BC</p><p>A personal knowledge garden for useful notes, project records, and experiments in public.</p><p class="meta" style="margin-top: 2rem">Let’s connect</p><p><a href={`mailto:${CONTACT_EMAIL}`}>Email me ↗</a></p><p><a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">GitHub ↗</a></p><p><a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></p></aside>
 		</div>
 	</div>
 </SiteLayout>

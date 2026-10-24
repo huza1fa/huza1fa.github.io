@@ -1,39 +1,18 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import Tag from './Tag.astro';
 import { formatDate, readingTime } from '../utils/content';
-
 interface Props { entry: CollectionEntry<'writing'>; featured?: boolean; }
 const { entry, featured = false } = Astro.props;
-const { title, description, publishDate, category, tags, placeholder } = entry.data;
+const { title, description, publishDate, category, placeholder } = entry.data;
 ---
-
-<article class:list={['writing-item', { featured }]}>
-	<div class="item-meta meta">
-		<time datetime={publishDate.toISOString()}>{formatDate(publishDate)}</time>
-		<span aria-hidden="true">/</span>
-		<span>{readingTime(entry.body)} min read</span>
-	</div>
-	<div class="item-main">
-		<h2><a href={`/writing/${entry.id}/`}>{title}</a></h2>
-		<p>{description}</p>
-		<div class="item-tags">
-			<Tag label={category} />
-			{tags.slice(0, 3).map((tag) => <Tag label={tag} />)}
-			{placeholder && <Tag label="Placeholder" />}
-		</div>
-	</div>
+<article class:list={['writing-item', { featured }]} data-category={category}>
+ <div class="item-meta meta"><span>{placeholder ? 'Placeholder' : category}</span><span class="item-time"><time datetime={publishDate.toISOString()}>{formatDate(publishDate)}</time><span aria-hidden="true">·</span>{readingTime(entry.body)} min read</span></div>
+ <h2><a href={`/writing/${entry.id}/`}>{title}<span class="item-arrow" aria-hidden="true">↗</span></a></h2><p>{description}</p>
 </article>
 <style>
-	.writing-item { display: grid; grid-template-columns: 10.5rem minmax(0, 1fr); gap: 1.5rem; padding: 1.6rem 0; border-top: 1px solid var(--rule); }
-	.writing-item:last-child { border-bottom: 1px solid var(--rule); }
-	.item-meta { padding-top: 0.27rem; }
-	.item-main h2 { max-width: 28ch; margin: 0; font-size: clamp(1.25rem, 2vw, 1.65rem); line-height: 1.2; letter-spacing: -0.03em; }
-	.item-main h2 a { color: var(--ink); text-decoration: none; }
-	.item-main h2 a:hover { color: var(--accent-ink); }
-	.item-main p { max-width: 62ch; margin: 0.5rem 0 0.7rem; color: var(--muted); font-size: 0.96rem; line-height: 1.55; }
-	.item-tags { display: flex; flex-wrap: wrap; gap: 0.7rem 1rem; }
-	.item-tags :global(.tag) { font-size: 0.66rem; }
-	.featured { padding-top: 0; border-top: 0; }
-	@media (max-width: 600px) { .writing-item { grid-template-columns: 1fr; gap: 0.6rem; padding: 1.35rem 0; } .item-meta { padding: 0; } }
+.writing-item { position: relative; min-width: 0; padding: 1.6rem 0; border-top: 1px solid var(--rule); }.writing-item:last-child { border-bottom: 1px solid var(--rule); }
+.item-meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 1rem; font-size: 0.54rem; letter-spacing: 0.04em; }.item-meta > span:first-child { color: var(--accent-ink); }.item-time { display: inline-flex; gap: 0.5rem; }
+h2 { margin: 0.75rem 0 0.65rem; font-size: clamp(1.2rem, 1.65vw, 1.6rem); line-height: 1.3; letter-spacing: -0.035em; }h2 a { display: block; padding-right: 2rem; color: var(--ink); text-decoration: none; }h2 a::after { position: absolute; content: ''; inset: 0; }.item-arrow { position: absolute; right: 0; color: var(--faint); font-size: 1.05rem; transition: color 180ms, transform 180ms; }.writing-item:hover .item-arrow { color: var(--accent); transform: translate(2px, -2px); }.writing-item:hover h2 a { color: var(--accent-ink); }
+p { max-width: 70ch; margin: 0; color: var(--muted); font-size: 0.85rem; line-height: 1.65; }
+@media (max-width: 600px) { .item-meta { font-size: 0.52rem; }h2 { font-size: 1.25rem; }.writing-item { padding: 1.5rem 0; } }
 </style>

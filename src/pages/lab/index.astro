@@ -11,20 +11,20 @@ const projects = (await getCollection('projects', ({ data }) => !data.draft)).so
 <SiteLayout title="Lab" description="Experiments, tools, systems ideas, and project notes.">
 	<div class="page lab-page">
 		<header class="lab-header">
-			<p class="eyebrow">Workbench</p>
-			<h1>The lab</h1>
+			<p class="eyebrow">The workbench / Projects & experiments</p>
+			<h1>Curiosity, with<br />an implementation.</h1>
 			<p>Projects, experiments, and working notes. The emphasis is on the problem, the approach, and what became clearer along the way.</p>
 		</header>
-		{projects.length > 0 ? <section class:list={['project-grid', { single: projects.length === 1 }]} aria-label="Projects">{projects.map((project) => <ProjectPreview entry={project} />)}</section> : <p class="empty">No public experiments yet.</p>}
+		{projects.length > 0 ? <section class:list={['project-grid', { single: projects.length === 1 }]} aria-label="Projects">{projects.map((project, index) => <ProjectPreview entry={project} index={index} />)}</section> : <p class="empty">No public experiments yet.</p>}
 	</div>
 </SiteLayout>
 <style>
 	.lab-page { padding-top: clamp(4rem, 10vw, 8rem); padding-bottom: 6rem; }
-	.lab-header { max-width: 43rem; margin-bottom: 4rem; }
+	.lab-header { max-width: 53rem; margin-bottom: 4rem; }
 	.lab-header h1 { margin: 0.35rem 0 0.65rem; font-size: clamp(3rem, 7vw, 5.5rem); line-height: 0.95; letter-spacing: -0.07em; }
 	.lab-header > p:last-child { max-width: 55ch; margin: 0; color: var(--muted); font-size: 1.12rem; }
-	.project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+	.project-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
 	.project-grid.single { max-width: 36rem; grid-template-columns: 1fr; }
 	.empty { color: var(--muted); }
-	@media (max-width: 600px) { .project-grid { grid-template-columns: 1fr; } }
+	@media (max-width: 850px) { .project-grid { grid-template-columns: 1fr; } }
 </style>

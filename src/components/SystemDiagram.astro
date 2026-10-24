@@ -1,0 +1,27 @@
+<div class="system-diagram" aria-hidden="true">
+ <div class="diagram-heading mono"><span>Fig. 01 — A systems practice</span><span class="diagram-plus">+</span></div>
+ <svg viewBox="0 0 480 420" fill="none">
+  <defs><pattern id="system-grid" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="0.8" fill="currentColor" opacity="0.16"/></pattern></defs>
+  <rect width="480" height="420" fill="url(#system-grid)"/>
+  <g class="construction" stroke="currentColor" stroke-width="0.7" opacity="0.15"><path d="M240 8v391M25 205h430M75 75l330 270M405 75 75 345"/><circle cx="240" cy="205" r="153"/><circle cx="240" cy="205" r="108"/></g>
+  <g class="connections" stroke="currentColor" stroke-width="1.3"><path d="m240 115-125 72v88l125 73 125-73v-88Z" stroke-dasharray="3 5" opacity="0.3"/><path d="m115 187 125 73 125-73M240 260v88" opacity="0.3"/><path d="M115 187v-57l125-73 125 73v57" opacity="0.3"/></g>
+  <g class="platform platform-bottom"><path d="m95 266 145-84 145 84v17l-145 84-145-84Z" fill="var(--surface)" stroke="var(--muted)" stroke-width="0.8"/><path d="m95 266 145 84 145-84M240 350v17" stroke="var(--muted)" stroke-width="0.8"/><path d="m111 267 129-74 129 74-129 74Z" stroke="var(--rule)" stroke-width="0.8"/><text x="171" y="283" transform="rotate(30 171 283)" fill="var(--muted)">INFRASTRUCTURE</text></g>
+  <g class="platform platform-middle"><path d="m95 197 145-84 145 84v17l-145 84-145-84Z" fill="var(--card)" stroke="var(--muted)" stroke-width="0.8"/><path d="m95 197 145 84 145-84M240 281v17" stroke="var(--muted)" stroke-width="0.8"/><path d="m111 198 129-74 129 74-129 74Z" stroke="var(--rule)" stroke-width="0.8"/><text x="174" y="211" transform="rotate(30 174 211)" fill="var(--muted)">PLATFORMS</text></g>
+  <g class="platform platform-top"><path d="m95 128 145-84 145 84v17l-145 84-145-84Z" fill="var(--paper)" stroke="var(--accent)" stroke-width="1.1"/><path d="m95 128 145 84 145-84M240 212v17" stroke="var(--accent)" stroke-width="1.1"/><path d="m111 129 129-74 129 74-129 74Z" fill="var(--accent)" fill-opacity="0.07" stroke="var(--accent)" stroke-opacity="0.35"/>
+   <path d="m211 112 29-17 29 17v33l-29 17-29-17Z" stroke="var(--accent)" stroke-width="1.3"/><path d="m211 112 29 17 29-17M240 129v33" stroke="var(--accent)" stroke-width="1.3"/><circle cx="240" cy="129" r="4" fill="var(--accent)"/>
+  </g>
+  <g stroke="var(--accent)" stroke-width="1"><path d="M385 128h39v-35h24M95 266H49v33H25"/><circle cx="385" cy="128" r="3" fill="var(--accent)"/><circle cx="95" cy="266" r="3" fill="var(--accent)"/></g>
+  <g fill="var(--muted)"><text x="370" y="78">APPLIED AI</text><text x="28" y="320">SOLID FOUNDATIONS</text><text x="226" y="402">01 / 03</text></g>
+  <g class="signal" fill="var(--accent)"><circle cx="424" cy="110" r="2.5"/><circle cx="49" cy="281" r="2.5"/></g>
+ </svg>
+ <div class="diagram-footer mono"><span><i></i> Thoughtful by design</span><span>Always evolving ↗</span></div>
+</div>
+<style>
+.system-diagram { color: var(--muted); width: 100%; max-width: 32rem; justify-self: end; }
+.diagram-heading, .diagram-footer { display: flex; align-items: center; justify-content: space-between; font-size: 0.56rem; letter-spacing: 0.065em; }
+.diagram-heading { padding: 0.8rem 0; border-top: 1px solid var(--rule); }.diagram-plus { font-size: 1.1rem; color: var(--accent); }
+svg { display: block; width: 100%; overflow: visible; } svg text { font-family: var(--font-mono); font-size: 8px; letter-spacing: 1px; }
+.diagram-footer { border-top: 1px solid var(--rule); padding: 1rem 0; }.diagram-footer span:first-child { display: flex; align-items: center; gap: 0.45rem; }.diagram-footer i { width: 5px; height: 5px; background: var(--green); border-radius: 50%; }
+@keyframes signal { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: no-preference) { .signal { animation: signal 4s ease-in-out infinite; } }
+</style>

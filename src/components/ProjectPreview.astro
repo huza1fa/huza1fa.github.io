@@ -1,30 +1,31 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import Tag from './Tag.astro';
-interface Props { entry: CollectionEntry<'projects'>; }
-const { entry } = Astro.props;
+interface Props { entry: CollectionEntry<'projects'>; index?: number; }
+const { entry, index = 0 } = Astro.props;
 const { title, description, status, technologies, placeholder } = entry.data;
+const variant = entry.id === 'wardstone' ? 'agent' : entry.id === 'taildoc' ? 'terminal' : 'compliance';
 ---
-
 <article class="project-preview">
-	<div class="project-top">
-		<p class="meta">{placeholder ? 'placeholder' : status}</p>
-		<span class="project-marker" aria-hidden="true"></span>
-	</div>
-	<h2><a href={`/lab/${entry.id}/`}>{title}</a></h2>
-	<p>{description}</p>
-	<div class="project-tags">{technologies.map((technology) => <Tag label={technology} />)}</div>
+ <a class:list={['project-art', variant]} href={`/lab/${entry.id}/`} tabindex="-1" aria-hidden="true">
+  <div class="art-label mono"><span>Experiment {String(index + 1).padStart(2, '0')}</span><span>↗</span></div>
+  {variant === 'agent' && <div class="agent-diagram"><div class="flow-start">Incoming work <span>↓</span></div><div class="agent-core"><svg width="22" height="24" viewBox="0 0 24 26" fill="none"><path d="m12 2 9 5v12l-9 5-9-5V7Z" stroke="currentColor"/><path d="m3 7 9 6 9-6M12 13v11" stroke="currentColor"/></svg><span>Wardstone runtime</span><span class="node-light"></span></div><div class="agent-branches"><span>Investigate</span><span>Policy check</span><span>Act & verify</span></div><p>Reason freely. Act deliberately.</p></div>}
+  {variant === 'terminal' && <div class="terminal-window"><div class="terminal-bar"><span>● ● ●</span><span>taildoc — zsh</span></div><div class="terminal-body"><p><b>~</b> taildoc explain access</p><p class="terminal-muted">Tracing effective policy…</p><p><span class="terminal-green">✓</span> source → group:engineering</p><p><span class="terminal-green">✓</span> grant → tag:production</p><p><span class="terminal-green">✓</span> tcp:443 <span class="terminal-green">allowed</span></p><p class="terminal-muted last-line">Evidence, not a mystery score.<span class="cursor">▍</span></p></div></div>}
+  {variant === 'compliance' && <div class="compliance-diagram"><div class="compliance-ring"><svg viewBox="0 0 150 150" fill="none"><circle cx="75" cy="75" r="62" stroke="currentColor" opacity="0.12" stroke-width="1"/><circle cx="75" cy="75" r="49" stroke="currentColor" opacity="0.2" stroke-width="9"/><circle cx="75" cy="75" r="49" stroke="currentColor" stroke-width="9" stroke-dasharray="235 308" transform="rotate(-90 75 75)"/><path d="m58 75 12 12 24-26" stroke="currentColor" stroke-width="2"/></svg></div><div class="frameworks"><span><i>✓</i> SOC 2</span><span><i>✓</i> ISO 27001</span><span><i>✓</i> PCI-DSS</span><small>Evidence → confidence</small></div></div>}
+ </a>
+ <div class="project-copy"><div class="project-top"><span class="meta">{variant === 'agent' ? 'Operational AI' : variant === 'terminal' ? 'Network observability' : 'Security readiness'}</span><span class="status"><i></i>{placeholder ? 'placeholder' : status}</span></div><h3><a href={`/lab/${entry.id}/`}>{title}<span aria-hidden="true">↗</span></a></h3><p>{description}</p><div class="project-tags">{technologies.slice(0, 4).map((technology) => <span>{technology}</span>)}</div></div>
 </article>
 <style>
-	.project-preview { display: flex; min-height: 15rem; flex-direction: column; padding: 1.35rem; border: 1px solid var(--rule); background: var(--surface); transition: border-color 180ms ease, transform 180ms ease; }
-	.project-preview:hover { border-color: var(--accent); transform: translateY(-2px); }
-	.project-top { display: flex; align-items: center; justify-content: space-between; }
-	.project-top p { margin: 0; }
-	.project-marker { width: 0.5rem; height: 0.5rem; background: var(--accent); }
-	.project-preview h2 { max-width: 18ch; margin: auto 0 0.55rem; font-size: 1.35rem; line-height: 1.15; letter-spacing: -0.03em; }
-	.project-preview h2 a { color: var(--ink); text-decoration: none; }
-	.project-preview h2 a:hover { color: var(--accent-ink); }
-	.project-preview > p { margin: 0; color: var(--muted); font-size: 0.88rem; line-height: 1.55; }
-	.project-tags { display: flex; flex-wrap: wrap; gap: 0.5rem 0.85rem; margin-top: 1rem; }
-	.project-tags :global(.tag) { font-size: 0.63rem; }
+.project-preview { min-width: 0; border: 1px solid var(--rule); background: var(--card); transition: border-color 200ms, transform 200ms; }
+.project-preview:hover { border-color: var(--faint); transform: translateY(-4px); }
+.project-art { display: flex; flex-direction: column; height: 15rem; padding: 1rem 1.1rem; background-color: var(--surface); background-image: radial-gradient(var(--rule) 0.8px, transparent 0.8px); background-size: 15px 15px; text-decoration: none; border-bottom: 1px solid var(--rule); overflow: hidden; }
+.art-label { display: flex; align-items: center; justify-content: space-between; color: var(--muted); font-size: 0.56rem; }.art-label span:last-child { font-size: 1rem; }
+.project-copy { padding: 1.5rem; }.project-top { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }.project-top .meta { font-size: 0.55rem; }
+.status { display: flex; align-items: center; gap: 0.3rem; color: var(--green); font-family: var(--font-mono); font-size: 0.55rem; }.status i, .node-light { width: 4px; height: 4px; background: var(--green); border-radius: 50%; flex-shrink: 0; }
+h3 { margin: 0.9rem 0 0.65rem; font-size: 1.7rem; letter-spacing: -0.05em; line-height: 1.2; }h3 a { display: flex; align-items: center; justify-content: space-between; color: var(--ink); text-decoration: none; }h3 a span { font-size: 1.15rem; color: var(--muted); transition: color 200ms, transform 200ms; }.project-preview:hover h3 a span { color: var(--accent); transform: translate(2px, -2px); }
+.project-copy > p { min-height: 6.6em; margin: 0; font-size: 0.86rem; color: var(--muted); line-height: 1.65; }.project-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1.5rem; }.project-tags span { padding: 0.18rem 0.4rem; border: 1px solid var(--rule); font-family: var(--font-mono); font-size: 0.54rem; color: var(--muted); }
+.agent-diagram { margin: auto 0; text-align: center; font-family: var(--font-mono); font-size: 0.6rem; }.flow-start { color: var(--muted); }.flow-start span { display: block; color: var(--accent); padding: 0.2rem; }.agent-core { display: flex; align-items: center; justify-content: center; gap: 0.7rem; padding: 0.8rem 0.5rem; border: 1px solid color-mix(in srgb, var(--accent) 65%, var(--rule)); background: var(--paper); color: var(--accent-ink); margin: 0 1.25rem; }.agent-branches { display: flex; justify-content: center; gap: 0.4rem; padding-top: 1.1rem; }.agent-branches span { position: relative; padding: 0.3rem 0.4rem; background: var(--paper); border: 1px solid var(--rule); color: var(--muted); font-size: 0.49rem; }.agent-branches span::before { content: ''; position: absolute; height: 1rem; left: 50%; bottom: 100%; border-left: 1px solid var(--rule); }.agent-diagram p { margin: 0.8rem 0 0; color: var(--muted); font-size: 0.5rem; }
+.terminal-window { margin: auto 0; color: #e4ebd9; background: #252d25; box-shadow: 0 8px 20px #0000000a; font-family: var(--font-mono); font-size: 0.56rem; border: 1px solid #454f41; }.terminal-bar { display: flex; justify-content: space-between; padding: 0.55rem 0.7rem; border-bottom: 1px solid #454f41; color: #a7b09e; font-size: 0.5rem; }.terminal-bar span:first-child { letter-spacing: 0.25em; color: #788470; }.terminal-body { padding: 0.6rem 0.8rem; }.terminal-body p { margin: 0.18rem 0; white-space: nowrap; }.terminal-body b { color: #ff986d; font-weight: 400; }.terminal-muted { color: #a2ae97; }.terminal-green { color: #c0d8a4; }.terminal-body .last-line { margin-top: 0.6rem; font-size: 0.48rem; }.cursor { color: #ff986d; }
+.compliance-diagram { display: flex; align-items: center; justify-content: center; gap: 0.7rem; margin: auto 0; color: var(--green); }.compliance-ring { width: 8rem; height: 8rem; }.compliance-ring svg { width: 100%; }.frameworks { display: flex; flex-direction: column; gap: 0.55rem; font-family: var(--font-mono); font-size: 0.58rem; }.frameworks span { color: var(--ink); }.frameworks i { margin-right: 0.5rem; font-style: normal; color: var(--green); }.frameworks small { margin-top: 0.5rem; color: var(--muted); font-size: 0.45rem; }
+@media (max-width: 1100px) and (min-width: 851px) { .project-copy { padding: 1rem; }.project-top { align-items: start; flex-direction: column; }.agent-core { margin: 0; }.agent-branches { gap: 0.2rem; }.agent-branches span { font-size: 0.43rem; padding: 0.3rem; }.terminal-body { padding: 0.6rem 0.4rem; font-size: 0.47rem; }.compliance-ring { width: 6rem; } }
+@media (max-width: 850px) { .project-art { height: 16rem; }.project-copy > p { min-height: 0; } }
 </style>
